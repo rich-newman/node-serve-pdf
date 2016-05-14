@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" >
+		<title>PDF Test</title>
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js"></script>
+	</head>
+	<body>
+		<h1>PDF Test</h1>
+		<button type="button" onclick="test()">Show Pdf Using vanilla XHR</button>
+		<div ng-app="myApp" ng-controller="myCtrl">
+			<button type="button" ng-click="showpdf()">Show Pdf Using Angular</button>
+		</div>
+		<script>
+			function test() {
+				var url = 'http://localhost:8000/Test.pdf';
+				 var xhr = new XMLHttpRequest();
+				 xhr.open('GET', url, true);
+				 xhr.responseType = 'arraybuffer';
+				 xhr.setRequestHeader("token", "blah");
+				 xhr.onload = function (e) {
+					if (this.status == 200) {
+					   var file = new Blob([this.response], { type: 'application/pdf' });
+					   var fileURL = URL.createObjectURL(file);
+					   window.open(fileURL, '_blank');
+					}					
+				 };
+				 xhr.send();
+			}
+			var app = angular.module('myApp', []).controller('myCtrl', function($scope, $http) {
+				$scope.showpdf = function() {
+					console.log('in showpdf');
+					var url = 'http://localhost:8000/Test.pdf';
+					var config = {
+						url: url,
+						method: 'GET',
+						responseType: 'arraybuffer',
+						headers: {
+							'Accept':'*/*',
+							"token": "blah"
+						}
+					}
+
+					$http(config)
+						.success(function (response) {
+							var file = new Blob([response], { type: 'application/pdf' });
+							var fileURL = URL.createObjectURL(file);
+							console.log('opening it');
+							window.open(fileURL, '_blank')
+						});
+				}
+			});
+		</script>
+	</body>
+</html>
