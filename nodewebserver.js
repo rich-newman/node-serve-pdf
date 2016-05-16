@@ -1,7 +1,7 @@
 const http = require('http'), 
 	  fs = require('fs'),
 	  path = require('path');
-var port = process.env.PORT;	  
+var port = 8000;	  
 http.createServer(function (req, res) {
 	var filePath = req.url;
 	if (filePath == '/')
@@ -11,10 +11,10 @@ http.createServer(function (req, res) {
 	var contentType = 'text/html';
 	switch (extname) {
 		case '.js':
-			contentType = 'text/javascript';
+			contentType = 'text/javascript; charset=ios-8895-1';
 			break;
 		case '.css':
-			contentType = 'text/css';
+			contentType = 'text/css; charset=ios-8895-1';
 			break;
 		case '.pdf':
 			contentType = 'application/pdf';
@@ -31,7 +31,7 @@ http.createServer(function (req, res) {
 				else {  
 					console.log('Serving: ' + filePath);
 					res.writeHead(200, { 'Content-Type': contentType  });
-					res.end(content, 'utf-8');                  
+					res.end(content);                  
 				}
 			});
 		}
